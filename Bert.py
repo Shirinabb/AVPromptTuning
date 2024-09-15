@@ -1,7 +1,7 @@
-import torch
-from transformers import BertTokenizer, BertForSequenceClassification, AdamW
-from torch.utils.data import DataLoader, TensorDataset, random_split
-from sklearn.metrics import classification_report
+import torch from transformers
+import BertTokenizer, BertForSequenceClassification, AdamW from torch.utils.data 
+import DataLoader, TensorDataset, random_split from sklearn.metrics 
+import classification_report
 commands = [
 "Turn left at the next intersection",
 "Call emergency services",
