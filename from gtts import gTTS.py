@@ -1,7 +1,7 @@
 from gtts import gTTS 
 
 # Text that you want to convert to speech
-text_to_speak = 'hello'
+text_to_speak = 'go around a pink motor'
 
 # Create a gTTS object
 tts = gTTS(text_to_speak)
