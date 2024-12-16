@@ -91,7 +91,7 @@ formatted_prompt = json.dumps(improved_prompt)
 # Define the SALMONN API endpoint
 salmonn_api_url = "https://api.salmonn.example.com/process_prompt"
 
-# Send the prompt to SALMONNA
+# Send the prompt to SALMONN
 response = requests.post(salmonn_api_url, data=formatted_prompt, headers={'Content-Type': 'application/json'})
 
 # Check the response
