@@ -1,5 +1,5 @@
 import torch 
-from transformers import BertTokenizer, BertForSequenceClassification, AdamW 
+from transformers import BertTokenizer, BertForSequenceClassification
 from torch.utils.data  import DataLoader, TensorDataset, random_split 
 from sklearn.metrics import classification_report
 commands = [
