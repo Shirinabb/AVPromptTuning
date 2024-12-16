@@ -1,0 +1,703 @@
+commands/command,Priority,Type
+turn left to pick up the pedestrian at the corner,Not safety,Traffic Management
+"there he is, follow that white car!",Not Safety,routing
+go! catch up to him!,Not safety,Traffic Management
+he is getting away! get right behind the white car!,Not safety,routing
+pull over to the right and park. greet little timmy and his babysitter,Not safety,parking
+continue to follow the car ahead through the yellow light,safety,Traffic Management
+let this bmw pass and then switch lanes.,safety,Traffic Management
+take a left at the light and park by the first tree where the person is standing. ,safety,parking
+there could be pedestrians coming through; leave plenty of room between us and the white car on the right.,safety,Traffic Management
+it looks like the truck ahead might be turning right; slow down behind the truck.,stop,Traffic Management
+that might be my friend jack by the tree on the right. stop next to him.,stop,Traffic Management
+drive up to the right side of that truck in front of us.,Not safety,Traffic Management
+park in front of the last vehicle on the right.,Not safety,parking
+pull alongside this white vehicle. i like the model and i want to take a better look at it.,Not safety,entertainment
+pull alongside the dark suv parked and make a complete stop.,stop,Traffic Management
+get next to the truck before us.,safety,Traffic Management
+pull up alongside the truck in front of us ,Not safety,routing
+keep following the truck in front of us. ,Not safety,routing
+pull up next to the pedestrian on our right. the one close to the tree. ,Not safety,Traffic Management
+"make a right turn, following this truck.",Not safety,routing
+park in front of this black suv,Not safety,parking
+pull up on the right of the truck up ahead,Not safety,routing
+pull up next to that pedestrian that is standing near that tree on the right. he is going to ride with us.,Not safety,Traffic Management
+"hey, pull over by the first pedestrian up ahead on the left. i want to ask for directions.",Not safety,Traffic Management
+is that kid over there jim's kid?  pull over and see.,Not safety,entertainment
+watch out for that person near the crosswalk up ahead.  he may be crossing right in front of us.,Not safety,Traffic Management
+follow that truck up ahead.,Not safety,routing
+pull up closer to that truck up ahead.,Not safety,routing
+go park over where that other car is.,Not safety,routing
+pull over there where that car is.,Not safety,Traffic Management
+pull over near that guy on the right side of the road near the corner.  we can give him a ride.,Not safety,Traffic Management
+is that jimmy?  i have not seen him in ages.  pull over so we can chat.,Not safety,Traffic Management
+let the pedestrian on the right cross the street before turning right. ,safety,Traffic Management
+park in front of the second vehicle on our right side,Not safety,parking
+stop and wait to see which way that vehicle is going.,stop,routing
+that is my friend's bicycle. pull up next to it.,Not safety,Traffic Management
+that is my friend. pull up next to her and pick her up.,Not safety,Traffic Management
+follow the red car.,Not safety,routing
+increase speed and pull up next to the silver car.,safety,Traffic Management
+pull up next to that man on our outer right and stop.,stop,Traffic Management
+follow the red car.,Not safety,routing
+find me a parking spot next to that pedestrian.,Not safety,parking
+we found my bike! i'm going to hop on it and ride home now. thanks!,Not safety,Traffic Management
+stop next to the woman in front of us standing closest to us.,stop,Traffic Management
+stop next to the yellow bicycle,stop,Traffic Management
+find a parking spot near the bicycle on the left,Not safety,parking
+follow the silver car in front of us,Not safety,routing
+follow the red car,Not safety,routing
+stay behind this red car until the next light.,Not safety,Traffic Management
+stay behind this car until the next light.,Not safety,Traffic Management
+follow this car until the next light then turn right.,Not safety,Traffic Management
+turn down the street where that car is.,safety,Traffic Management
+get ahead of this car and take a right turn.,Not safety,routing
+get in front of this car,safety,routing
+pass the  intersection before the grey car arrives. ,safety,Traffic Management
+continue straight ahead before the pedestrian passes the street.,safety,Traffic Management
+"see that bike under the tree, i knew that tom left his bike somewhere near here last night. that might be his bike. pull over next to it. ",Not safety,Traffic Management
+follow that red car that is driving on the main road,Not safety,routing
+"when that red car has passed the intersection, continue straight",Not safety,routing
+"oh, i see kate. she is waiting on the corner. pull over next to her. ",Not safety,Traffic Management
+we should go the same direction as the red car that is turning on the other side of the traffic junction. ,Not safety,routing
+"once the traffic lights turn green, follow the silver suv",Not safety,Traffic Management
+follow this car.,Not safety,routing
+turn right after the pedestrian has crossed the street,safety,Traffic Management
+"move a bit forward, so we can what is coming from behind that truck.",safety,Traffic Management
+stop next to the semi truck on the left.,stop,routing
+speed up and pass the truck on our left when the light changes.,safety,Traffic Management
+"after that person has crossed, let us go to the right.",safety,Traffic Management
+a man is crossing the road. let him pass and then we can go to the right.,safety,Traffic Management
+make a quick left before that car from the opposite lane reaches the intersection.,Not safety,routing
+pull over next to that pedestrian on the other side of the intersection.,Not safety,Traffic Management
+"park in front of the black car on the left, the one that is the last in the line of parked cars",Not safety,parking
+park by that man in black,Not safety,parking
+do i know that person? pull up beside that person that is running. ,Not safety,Traffic Management
+"what is that on the curb? slow down for that thing on the right, i think its a cat. ",safety,Traffic Management
+"and there is john! pull up to him, see what he is doing out in the rain. ",Not safety,Traffic Management
+stop next to the pedestrian in the black shirt on the left,stop,Traffic Management
+stop behind the first car on the left.,stop,Traffic Management
+drop me off next to the white car on the left.,Not safety,Traffic Management
+continue straight and drop me off next to the box truck.,safety,Traffic Management
+i see my contact in front of us. he is the one standing next to his car,Not safety,Traffic Management
+what is this child doing all alone on the road? pull up near them!,Not safety,Traffic Management
+pick up husband standing next to his car on the right.,Not safety,Traffic Management
+"slow down, a truck is ahead.",safety,Traffic Management
+be careful. a man may attempt to cross the road.,safety,Traffic Management
+turn right after that car,Not safety,routing
+oh i think that is a friend who is waiting for me. turn around up ahead so we can park there.,Not safety,Traffic Management
+slow down so i can say hi to that person,Not safety,Traffic Management
+stop to let him cross,stop,Traffic Management
+oh my god we finally found my chicken. stop near it!,Not safety,entertainment
+"stop next to that person, i want to ask where i can find a good restaurant.",Not safety,entertainment
+make a you-turn near the yellow car.,Not safety,Traffic Management
+"there is a person near the curb, i need to get out of there car near him.",Not safety,Traffic Management
+park in front of the truck.,Not safety,routing
+park next to the person on the left.,Not safety,routing
+turn left and pick up my son. he is standing in front of us.,Not safety,routing
+pull over next to this bike so i can load it in my car,Not safety,routing
+ask this guy on the left for directions to mexican food place,Not safety,entertainment
+pick up these people,Not safety,Traffic Management
+"slow down and go wide around, that dog is off leash",safety,Traffic Management
+park here to pick up steve.,Not safety,parking
+slow down to talk to this man about his dog.,safety,entertainment
+park in front of this car.,Not safety,parking
+let me pick up that bike please! it is mine.,Not safety,Traffic Management
+move to the right to give the dog on the left side of the road more space.,safety,Traffic Management
+turn right at the blue dumpster.,Not safety,routing
+"stop at the bike on the left, it looks like my friend's which was stolen.",stop,Traffic Management
+"honk at the man on the left, that is my neighbor steve.",Not safety,Traffic Management
+pull up next to the pedestrian waiting by the trash cans. ,Not safety,Traffic Management
+this car looks familiar. slow down a bit if you will.,Not safety,Traffic Management
+i know the man walking on the left. stop next to him.,stop,Traffic Management
+this car is carrying cargo. move a bit to the right and then continue towards our destination.,Not safety,routing
+turn left and find a parking place near the large pick-up,Not safety,parking
+follow that car.,Not safety,routing
+park by that traffic cone.,Not safety,parking
+make a you-turn and pull up behind the silver vehicle that is on our left.,Not safety,Traffic Management
+pull up next to the pedestrian walking on the left.,Not safety,Traffic Management
+move away from that total black truck.,safety,routing
+park next to that vehicle that is stationed on the left side of the road.,Not safety,parking
+"park near that dog, he is so cute!",Not safety,parking
+follow that jeep.,Not safety,routing
+turn right past the barrier. ,Not safety,routing
+park near that debris.,Not safety,parking
+stay to the right of the black car on the left,Not safety,routing
+stop for the man ahead in the white shirt,stop,Traffic Management
+pass this white truck in the left lane,Not safety,Traffic Management
+turn around and follow the grey toyota rav 4,Not safety,routing
+make a you turn and follow the white lexus sedan,Not safety,routing
+follow that car and take the next right,Not safety,routing
+stop next to the women walking her dog,stop,Traffic Management
+follow the car in front ,Not safety,routing
+stop the vehicle next to the man wearing a white shirt.,stop,Traffic Management
+change lanes so we do not hinder the guy in the wheel chair.,safety,Traffic Management
+"be on the lookout for john, he should be somewhere around here wearing a black top ",Not safety,Traffic Management
+follow the black suv past the wheelchair,Not safety,Traffic Management
+move to the left lane to avoid the guy in the wheelchair,Not safety,Traffic Management
+please follow that suv.,Not safety,routing
+that is my wife's car over on the left. pull up next to it,Not safety,Traffic Management
+pull up next to the first traffic cone on the right,Not safety,routing
+try to park in front of the first car we meet on the left side of the road. ,Not safety,parking
+this poor guy in a wheelchair seems like he is having a hard time to move forward. let me out just before him so i can help him,Not safety,Traffic Management
+catch up with the black car in the left lane,Not safety,Traffic Management
+wait for that pedestrian to clear the intersection. then continue straight ahead. ,safety,Traffic Management
+"let these pedestrians pass, and then turn right",safety,Traffic Management
+"when the light turns green, park up behind that truck",safety,Traffic Management
+there are two people walk on the crosswalk to the right. we need to pick up the one that is walking on the right side. get over to him. ,Not safety,Traffic Management
+let us park behind that bus because i'm in a big hurry. i will go on foot from here,Not safety,parking
+"we are about to pass a guy in a wheelchair, pull over next to it. maybe he can come with us. ",safety,Traffic Management
+wow slow down! this man is not using the crosswalk and is going to cross the road!,safety,traffic Management
+park behind that truck that is way up ahead. ,Not safety,parking
+pull over next to the wheelchair,Not safety,Traffic Management
+slow down and change lanes behind the black car,safety,Traffic Management
+that is jack way up there across the street. can we turn around whenever it is possible? i need to meet him. ,Not safety,Traffic Management
+"slow down, stay at least 5 feet behind the man in the wheelchair. ",safety,Traffic Management
+"slow down as we approach the bulldozer, i want to see the brand. ",safety,Traffic Management
+is there a right turn after that bulldozer? slow down as we approach it so i can see. ,safety,Traffic Management
+decrease speed for those pedestrians crossing up ahead. ,safety,Traffic Management
+turn into the left lane so we avoid those pedestrians,safety,Traffic Management
+"turn into the left lane and slow down, the car ahead is stopping for the pedestrians. ",safety,Traffic Management
+change lanes and pass the wheelchair. ,safety,Traffic Management
+"pull up next to the man in the wheel chair, i want to see if he needs help. ",Not safety,Traffic Management
+take a left into that apartment building. the driveway is right behind the pedestrian ,Not safety,routing
+"approach and stop for the boy crossing the street, i think that is who i'm meeting for dinner. ",stop,entertainment
+that is my friends car! move into the left lane and follow that car. ,Not safety,routing
+merge into the left lane to avoid him.,safety,routing
+avoid that construction equipment. merge into left lane.,safety,routing
+change lanes to stay away from the man in the wheelchair ,safety,Traffic Management
+switch to left lane to pass man in wheelchair ,safety,Traffic Management
+switch lanes and follow the black car that is driving in front of us. ,Not safety,routing
+there is a spot behind that car on the other side of the road. park behind it. ,Not safety,routing
+"keep a lookout over the road for my friend, he should be wearing a black coat",Not safety,entertainment
+pull up behind that black car so that i can see the building numbers on the other side.,Not safety,entertainment
+we need to park on the other side of the road behind that black car.,Not safety,parking
+"pull up next to the guy in the wheelchair, he seems in need of help. ",safety,Traffic Management
+"slow down, the car in front of us is switching lanes.",safety,Traffic Management
+follow the black to its destination.,Not safety,routing
+move over to the left lane after this car passes us.,Not safety,routing
+there is a free meter on the right; see if you can parallel park behind that dark sports car.,Not safety,routing
+shift to the left lane when you can so we do not get too close to that wheelchair.,safety,Traffic Management
+"my building is on the right, so pull up next to this orange billboard",Not safety,Traffic Management
+hey wow! there is a man in a wheelchair in front of us. could you stop before him please? i'm going to help him.,safety,Traffic Management
+park behind this car next to the pole,Not safety,parking
+park in front of this white car,Not safety,parking
+stop in front of this car ,stop,routing
+follow the person in front of us,Not safety,routing
+we should turn where that pedestrian is.,Not safety,Traffic Management
+park behind the police car.,Not safety,parking
+maybe there is a parking spot after the last parked car on the right. find a parking spot there please.,Not safety,parking
+hey! there is a parking spot before the black suv. park there.,Not safety,parking
+drop me off near the suv near the trees.,Not safety,routing
+my store is just behind the white truck. park there please.,Not safety,Traffic Management
+turn after the parked car near the trees.,Not safety,parking
+do a you-turn and drop me off behind the ups truck.,Not safety,routing
+follow the car in front of me. ,Not safety,routing
+turn left before the white truck ahead.,safety,routing
+parallel park in front of that black car on the left. ,Not safety,parking
+there is my friend bill on the other side of the street.  make the next you-turn and then pull up beside him.,Not safety,Traffic Management
+move to the right lane and follow that black car.,Not safety,Traffic Management
+go straight ahead until you are within ten meters behind that car,safety,traffic Management
+park behind the car on the right side.,Not safety,parking
+park right behind that car,Not safety,parking
+make a you-turn and park in front of the car on the left side of the road.,Not safety,routing
+get in the left lane behind this green truck,Not safety,Traffic Management
+"turn right here, but let that pedestrian wearing black cross the road. ",safety,Traffic Management
+speed up and pass the truck ,safety,Traffic Management
+i do not know why jake is going straight with his silver car but i'm sure we should turn right here.,Not safety,routing
+pick up the man on the outer right. ,Not safety,routing
+stop behind the tan car,stop,Traffic Management
+change lanes to get behind the large green truck. ,Not safety,Traffic Management
+avoid the large truck on the left. ,safety,Traffic Management
+i see my friend on the corner. make a left turn and stop in front of him. ,Not safety,entertainment
+drive straight passed the trailer. ,safety,routing
+stay to the right of this emergency vehicle,safety,routing
+i need to follow the silver car,Not safety,routing
+pull to the right and stop by those pedestrians,stop,Traffic Management
+get behind the trailer in the left lane,Not safety,Traffic Management
+pick up my husband from the right curb,Not safety,entertainment
+pick up the pedestrian next to the lamp post on the right.,Not safety,entertainment
+stay in this lane and pass that truck. ,safety,Traffic Management
+keep at least 10 feet away from the police vehicle.,safety,Traffic Management
+follow the gray sedan that is in front of us. ,Not safety,routing
+what are we doing in this lane? we ought to go right here! switch lanes but slow down for that person crossing the road,safety,Traffic Management
+park behind that dark car on the right,Not safety,parking
+"there is dave's car, can you park alongside that white jeep please",Not safety,parking
+"that is a police car on the right, take it easy so we do not get into trouble",safety,Traffic Management
+can you actually stop next to this police car? i want to report a crime with them.,stop,Traffic Management
+could you let me out near that traffic cone near the building? it is where my work is,Not safety,routing
+take me to this white car please,Not safety,routing
+go to this last car to our left,Not safety,routing
+here's a spot! park in front of this black car here on our right,safety,parking
+"let us park right here, behind this gray car on our right hand side",Not safety,parking
+pull up right next to that cone in the middle,Not safety,routing
+"see if there is more parking over there, near that white utility van, second from right to left in that row of parked cars",Not safety,parking
+find a place to park near that big white car on the left. ,Not safety,parking
+find a parking spot near the white truck,Not safety,routing
+park on the opposite side of the street from this white van next to us.,Not safety,parking
+stop next to the bicycles on the left.,stop,routing
+find me a parking spot close to the blue jeep.,Not safety,parking
+please park close to the white van to the left.,Not safety,parking
+find me a parking spot near the black sedan.,Not safety,parking
+park close to the black and white van on our left.,Not safety,parking
+my wife should be behind this grey jeep. turn and pick her up.,Not safety,entertainment
+turn left after the man in the red shirt crosses the street.,Not safety,entertainment
+park close to that red jeep.,Not safety,parking
+turn right just before the white car,Not safety,routing
+turn right just after we pass this car. ,safety,routing
+make an you turn and follow this vehicle.,Not safety,routing
+please turn around and follow this truck.,Not safety,routing
+find a parking spot after this truck passes.,Not safety,parking
+please drop me off near the first white car on the left. ,Not safety,entertainment
+find a parking spot near that white car on the left. ,Not safety,routing
+please drop me off near that car on the other side of the street. ,Not safety,entertainment
+pull up next to that bicycle rack. my bike should be there. ,Not safety,entertainment
+find a parking spot near the bicycle rack,Not safety,parking
+please drop me off in front of the bicycle rack,Not safety,entertainment
+turn right at the opposite side of the road from that bicycle rack.,Not safety,routing
+"pick up james, he is in front of the bicycle rack",Not safety,entertainment
+please drop me off near that blue car across the street from here. ,Not safety,entertainment
+paula will meet us at that blue car. pull over next to it. ,Not safety,entertainment
+find a parking spot for us near the blue car that is on our left. ,Not safety,parking
+find me a parking spot near that white van on the left. ,Not safety,parking
+please drop me off near that black car that is parked on the left side of the street. ,Not safety,entertainment
+make an you turn and follow this van.,Not safety,routing
+turn around and follow this truck.,Not safety,routing
+get behind that dhl van in the other lane,Not safety,Traffic Management
+change destination and follow that yellow van,Not safety,routing
+"i have an appointment with someone near here, pull up behind that black and white police car. ",Not safety,entertainment
+"stop near the police car, i want to talk to the officer.",Not safety,routing
+find me a parking spot near that police car,Not safety,parking
+make an you turn and follow this white van.,Not safety,routing
+get behind that white van in the other lane,Not safety,Traffic Management
+try to turn around and follow that white van.,Not safety,routing
+"that is rogers car over there, the blue one on the left. please find a parking spot nearby.",Not safety,parking
+try to park next to that vehicle that is parked on the left side of the street.,Not safety,parking
+can you please find a way to turn around and follow this gray car?,Not safety,routing
+turn around as soon as possible to follow this car.,Not safety,routing
+follow that truck,not safety,routing
+follow that black truck,Not safety,routing
+turn left after that black truck,Not safety,routing
+park near in front of that first white car to the left,Not safety,parking
+park next to that vehicle on the left,Not safety,parking
+park next to that car on the left,Not safety,parking
+park in front of that car parked on the other side of the street,Not safety,parking
+park behind that white car over on the left,Not safety,parking
+park next to that white car to the left. ,Not safety,parking
+park near the bicycle rack,Not safety,parking
+turn left after that bicycle rack,Not safety,routing
+find a parking space near that bicycle rack,Not safety,parking
+park behind that bicycle rack,Not safety,parking
+follow that passing car,Not safety,routing
+park in front of that blue car,Not safety,parking
+park near that blue car,Not safety,parking
+find a parking space near that blue car over on the left,Not safety,parking
+park alongside that blue car on the left. ,Not safety,parking
+park alongside that blue car,Not safety,parking
+follow that blue car when it leaves,Not safety,routing
+park near that white van,Not safety,parking
+park near that white car,Not safety,parking
+park behind that white car over on the left,Not safety,parking
+park in front of that white car,Not safety,parking
+park near that black car on the left,Not safety,parking
+slow down near the police vehicle,safety,Traffic Management
+turn left after the police vehicle,Not safety,routing
+follow the police vehicle,Not safety,routing
+find a parking space near that jeep on the left,Not safety,parking
+let that person cross the road,safety,Traffic Management
+park near that adult in the red shirt,Not safety,parking
+slow down and let that pedestrian cross the road,safety,Traffic Management
+please pull over near my friend standing by that pole,Not safety,Traffic Management
+please find a parking space near that pedestrian over on the left by that pole. ,Not safety,parking
+change lanes and park next to that red car on the left,safety,parking
+park next to the bicycle rack ,Not safety,parking
+park behind the white mercedes on the right,Not safety,parking
+pull up alongside that pedestrian walking close to that white car on the right. ,safety,Traffic Management
+"go slowly past that white van, i want to read the number plate.",safety,Traffic Management
+"go right and get over to that pedestrian, i am kind of lost and wish to ask him for coordinates. ",Not safety,entertainment
+stop in in front of the white vehicle,stop,Traffic Management
+"the sign behind the white pickup says something, i want to read it, pull up near it.",safety,Traffic Management
+follow that dark car through the roundabout.,not safety,routing
+"i need to ask for directions, pull over behind this person.",Not safety,entertainment
+"we are going the wrong way, make a you-turn before this truck.",Not safety,routing
+maintain distance and follow this car to destination,safety,Traffic Management
+stop near the emergency vehicle ,stop,Traffic Management
+follow this car until we reach the next bank,Not safety,routing
+stop the car next to that pedestrian on the far right side of the roundabout,stop,Traffic Management
+stop after the sign on that trailer.,stop,Traffic Management
+pull over at the sign on that trailer.,stop,Traffic Management
+park next to the white suv on the right,Not safety,parking
+pull up behind the white suv.,Not safety,routing
+follow that car in front of us,Not safety,routing
+pull up beside the police car.,Not safety,Traffic Management
+pull up in front of the police car.,Not safety,Traffic Management
+follow that white van.,Not safety,routing
+turn right after the last barrier,Not safety,routing
+pull up to that pedestrian so i can talk to him.,Not safety,entertainment
+"slow down and prepare to pull into an empty parking spot on the left, near the dark van.",safety,routing
+"after the truck passes, pull into a parking spot next to the silver vehicle on the left.",safety,routing
+stop! that is my company's van.,stop,routing
+slow down and go near that bike. i want to take a picture of it.,safety,entertainment
+go a bit to the right because that big truck is coming towards us.,Not safety,routing
+could you drop me off at the red truck please?,Not safety,entertainment
+"the yellow car is trying to pull out, take its parking spot.",Not safety,parking
+park behind that police vehicle on the right.,Not safety,parking
+park on other side of that car.,Not safety,parking
+turn left after the truck.,Not safety,routing
+park near motorcycle.,Not safety,parking
+park across the street from the white car.,Not safety,parking
+park in front of the white car on the right.,Not safety,parking
+avoid the oncoming truck.,safety,routing
+park next to the car on the right.,Not safety,parking
+turn where the motorcycle is.,Not safety,routing
+go as close to the right dividing line as you can when you pass the police officer.,Not safety,routing
+"that silver car over on the left belongs to tom, park near it. ",Not safety,parking
+pull in behind the red car. ,Not safety,routing
+wait for that last pedestrian to cross the turn right. ,safety,Traffic Management
+pull up next to the officer. i need to talk to him. ,Not safety,Traffic Management
+park next to the white cars on the left up ahead.,Not safety,parking
+"i'm meeting somebody on that bus, park up next to it.",Not safety,entertainment
+slow down for the traffic cop.,safety,Traffic Management
+park next to the people on the sidewalk up ahead.,Not safety,parking
+turn left and pull into that parking lot.,Not safety,parking
+turn at the traffic cone up on the left.,Not safety,Traffic Management
+drive wide around the police officer.,Not safety,Traffic Management
+stop here if the cop says to.,stop,Traffic Management
+turn right into the parking lot where that white car is and park.,Not safety,parking
+"the cop is waving me on, speed up.",safety,Traffic Management
+"there is sally on the bench, park next to her.",not safety,parking
+see those three guys. i know the one on the left. pull up next to him. ,not safety,Traffic Management
+park behind the bus.,not safety,parking
+turn right at the road that truck is driving by.,Not safety,routing
+"slow down, that guy looks like he is about to step onto the road.",safety,Traffic Management
+park just past the crosswalk that car is on right now.,Not safety,parking
+park behind that car on the right.,Not safety,parking
+"stop, wait for the man on the right hand side to cross, then turn right.",stop,routing
+wait for that guy wearing the black shirt to pass the entrance to the parking lot before driving into it.,Not safety,Traffic Management
+this cop is telling us to continue so straight ahead we go!,Not safety,routing
+be careful of the pedestrian on the road and give plenty of room. ,safety,Traffic Management
+"a friend is waiting on the bench to be picked up, pull over nearby. ",Not safety,Traffic Management
+park behind the red car on the right side of the road. ,Not safety,parking
+"head for the car park on the left side of the road, with the white pick up truck. ",Not safety,parking
+park behind the fourth vehicle we have on our right,Not safety,parking
+park in front of that black car.,Not safety,parking
+get closer to the second white car.,Not safety,routing
+park behind the white van.,Not safety,parking
+could you get closer to the police officer. i need to ask him something.,Not safety,Traffic Management
+stay in this lane as there might be children behind that bus.,safety,Traffic Management
+drop me off near the white construction barrier.,Not safety,entertainment
+try to find a parking spot after passing the white car.,Not safety,parking
+"stop near the man in yellow, i need to know where this bus is going",stop,Traffic Management
+stop behind the bus for a brief period of 20 seconds.,stop,Traffic Management
+turn right after the white van.,Not safety,routing
+slow down when passing this guy with white shirt ,safety,Traffic Management
+catch up to the car in front of us. ,safety,routing
+turn down the next street to get to the parked car next to the tree,safety,routing
+stop on right hand side of the road near the 4x4,stop,routing
+park near the white car,Not safety,parking
+"pull up alongside the curb, when we are near that pedestrian on the other side of the road",Not safety,Traffic Management
+park near the truck up ahead on the left,Not safety,parking
+drop me near the traffic cone,Not safety,entertainment
+park near the first car on the left,Not safety,parking
+"follow the white truck, make a you-turn first",Not safety,routing
+make a you-turn and follow that white car. ,Not safety,routing
+turn the direction that the man is pointing,safety,routing
+let me ask something to this guy with his blue shirt,Not safety,entertainment
+i have an appointment with someone near here. he/she should be wearing something white.,Not safety,entertainment
+stop near that blue car,stop,routing
+"pull in behind that car, those two people are standing next to. ",Not safety,Traffic Management
+turn in the direction the police officer is pointing at the intersection,Not safety,routing
+find parking near my friend in the blue shirt,Not safety,parking
+pull over to pick up my father on the right,Not safety,Traffic Management
+wait for that parking spot to open up when the white car on the right moves,Not safety,parking
+this policeman is telling me to pass. ignore the stop sign and turn right,safety,routing
+"stop near the policeman, i have something to ask him",stop,entertainment
+oh god that is bob in front of us! turn right and follow him,Not safety,routing
+do not move until the policeman tells us to,stop,Traffic Management
+drive past the officer onto the parking.,not safety,parking
+find me parking space near that car,not safety,entertainment
+find me a parking space near that car,not safety,entertainment
+park next to the black suv,not safety,parking
+find me parking space near that car,Not safety,parking
+try to find me a parking space near that grey car,Not safety,parking
+park in front of that black car on the left,Not safety,parking
+turn right before that black car over there,Not safety,routing
+the officer is telling us to wait! stop!,stop,Traffic Management
+follow the blue sedan.,Not safety,routing
+please stop next to my friend who is standing a bit further down the road. ,stop,entertainment
+park near this man.,Not safety,parking
+turn right after this truck.,Not safety,routing
+that man is telling us to slow down. do that but continue straight ahead.,safety,Traffic Management
+before that truck turn to the right please.,safety,Traffic Management
+mister joseph is standing there up ahead on the left. stop there for a little bit.,safety,Traffic Management
+"turn right down the driveway, just behind that truck. ",Not safety,routing
+"the crossing guard is ahead on the left, pull up next to him.",safety,routing
+keep right to avoid the guard,safety,routing
+park near that white truck,Not safety,parking
+slow down near the white truck,safety,Traffic Management
+turn right before that blue garbage bin,Not safety,routing
+turn right after those orange cones,Not safety,routing
+"that is my friend near the trash can, pick him up",Not safety,entertainment
+pick up the man,Not safety,Traffic Management
+park next to that traffic cone,Not safety,parking
+turn right in front of the truck,Not safety,routing
+drop me off at the officer,Not safety,entertainment
+park in front of the truck,Not safety,parking
+park beside the trash can,Not safety,parking
+bark beside the trash can,Not safety,parking
+turn next to the fedex van,Not safety,routing
+there is jimmy. stop next to him.,Not safety,entertainment
+park next to this man.,Not safety,parking
+ask this police officer how i need to get to my destination,Not safety,entertainment
+try to find a way to get closer to this fedex car. i think we need to go left up ahead,Not safety,routing
+park near that fedex car on the left.,Not safety,parking
+park after that car has passed us.,safety,parking
+park near that police officer standing further down the road.,safety,parking
+pull in behind the white fed ex van.,Not safety,routing
+"slow down as we approach the van, i think it is reversing.",safety,entertainment
+speed up after we pass the van.,safety,routing
+pull over on the left level with the back of the white car.,Not safety,routing
+"slow down as you pass the black car, i need to read the number plate.",safety,entertainment
+"my mate has parked his black car on the left, pull over on the curb behind it.",Not safety,Traffic Management
+my mum's black car is over there in the left. slow down next to it so i can see if she is there.,safety,Traffic Management
+pull over where the man in the orange vest is waiting.,Not safety,Traffic Management
+mount the pavement and park up just after where the man is standing.,Not safety,Traffic Management
+stop in the yellow box on the road before you get to the police officer up ahead.,stop,Traffic Management
+carry on straight past the person standing on the pavement.,not safety,entertainment
+take the left hand turn just before where that car is now.,not safety,routing
+"i need to pick up the person on the left, pull over.",not safety,Traffic Management
+make a right turn before that red barrier.,not safety,Traffic Management
+pull up next to the officer. ,not safety,Traffic Management
+"pull up to the right, next to that black car behind the white barrier. ",Not safety,Traffic Management
+turn right and go past that white truck,Not safety,routing
+find a place to park near the van on the left. ,Not safety,parking
+overtake the van in front of us when you can do so.,not Safety,routing
+stop behind the car turning left.,stop,routing
+slow down and do not drive too close to the white van in front of us.,Safety,traffic management
+follow this black car going left into the drive way,not Safety,routing
+park next to this car.,not Safety,parking
+go forward and stop in front of that white parked car,stop,routing
+park next to this vehicle on the right,not Safety,parking
+turn after that vehicle on the right.,not Safety,routing
+park in the space in front of that black car at the end of the parking lot.,not Safety,parking
+follow the white car on the right.,not Safety,routing
+park next to that car over there in the back.,not Safety,parking
+head over towards that car behind the trees.,not Safety,traffic management
+turn after that car on the right.,Safety,routing
+could we maybe move around the car in front of us? they are just standing still for nothing,not Safety,traffic management
+switch lanes to follow the car passing on the left,not Safety,traffic management
+pass the car in front of us and drive straight,not Safety,traffic management
+"this is going to take forever. get into the next lane, behind the car that just passed us.",not Safety,traffic management
+"when it is clear, just go around this car and keep going straight. i do not want to wait this long to turn here.",not Safety,routing
+keep following the car in front of us. ,not Safety,routing
+change destination and get in the same lane as the black car.,not Safety,traffic management
+slow down. that car in front of us is stationed in the middle of the road.,Safety,traffic management
+take a left and catch the next road to avoid the traffic up ahead.,Safety,traffic management
+stop near the black sedan up ahead on the left. i think it belongs to my friend.,stop,Entertainment
+there is an available parking spot near that black car on the right. park over there. ,not Safety,parking
+keep following the car in front of us. ,not Safety,routing
+slow down up ahead of still traffic.,Safety,traffic management
+slow down and stop once we get to that black car parked behind the fence. ,not Safety,routing
+get closer to the vehicle in front,not Safety,routing
+"over there, go left and park next to that white car on the parking lot. ",not Safety,parking
+turn left into this driveway and park next to the red car in there,not Safety,routing
+"we can turn left in this driveway, right before that silver suv",not Safety,routing
+ok i do not want to wait for all that traffic. just turn in the street left jusr before the last car in front,not Safety,routing
+park near this grey car in front of us,not Safety,parking
+"let this car pass, please",not Safety,traffic management
+"follow this car, we are going to the same restaurant.",not Safety,Entertainment
+slow down and let the car pull out,Safety,traffic management
+stop and let the gray car coming from the left exit first,Stop,traffic management
+follow that gray car in front of us. ,not Safety,traffic management
+slow down a bit so that car can safely pull out onto the road. ,Safety,traffic management
+park in the empty space next to the silver car,not Safety,parking
+park in the available space next to the black car ,not Safety,parking
+"this car is trying to pull out, stop to let them go first. ",Stop,traffic management
+stop as this car decides to cut me off. and then honk the horn. ,Stop,traffic management
+pull to the left of this car,not Safety,traffic management
+stop as their brake lights are also on ,Stop,traffic management
+slow down where this car does since they are driving through a puddle and bump,Safety,traffic management
+find somewhere to park on the left near the sedan.,not Safety,Parking
+stop to allow the gray sedan to pull out. ,Stop,traffic management
+follow the black sedan forward. ,not Safety,routing
+"slow down, let that car leaving the parking lot go first. then turn left onto the parking lot. ",Safety,Parking
+turn left where that other car is coming from,not Safety,routing
+stop close to te car in front of you,Stop,traffic management
+"after that car has moved out, turn into the parking lot",not Safety,Parking
+follow the white van,not Safety,routing
+i wish to follow the first car up front.,not Safety,routing
+i wish to follow the middle car.,not Safety,routing
+i wish to follow this last car.,not Safety,routing
+follow that car,not Safety,routing
+remain at a standstill in order to allow this car to pass,Safety,traffic management
+follow this car,not Safety,routing
+switch lanes and get behind the silver car.,not Safety,traffic management
+accelerate and follow the white van,Safety,traffic management
+follow the car in front of us.,not Safety,routing
+follow the car in front of us.,not Safety,routing
+pull into the right lane after this car in front of us has passed.,not Safety,routing
+park in the lot next to that car. ,not Safety,Parking
+take a right where that truck is driving towards us. ,not Safety,routing
+take a left where that truck is driving towards us. ,not Safety,routing
+take a right and merge into the lane that the car that just passed us was in. ,not Safety,traffic management
+follow the silver suv,not Safety,routing
+we should turn around after the white van passes us. ,not Safety,routing
+"we should turn right, where that white van just came from. ",not Safety,routing
+turn right and follow the gray car,not Safety,routing
+"after this car has passed, continue straight ahead.",Safety,routing
+can we please change lanes because this car in front of us is behaving weird.,not Safety,routing
+change lanes and get behind the white hatchback.,not Safety,routing
+wait and let this car in front of us proceed first. ,not Safety,routing
+follow the car ahead of us,not Safety,routing
+follow the blue car that is my friend mark. we are having lunch together today.,not Safety,Entertainment
+make the turn after this grey can and speed up because we are running late! my boss is going to fire me!,Safety,traffic management
+make a wide left around the car that is attempting to park in front of us.,not Safety,Parking
+make a wide left around the car parking and continue straight. ,Not Safety,Parking
+drive through the parking lot and park near that grey car on the right ,Not Safety,Parking
+"if there is a spot next to that mercedes, park next to it. ",Not Safety,Parking
+"slow down. once that car has parked, we can move on.",Safety,traffic management
+wait for the black car to park. then look for an available spot. ,Not Safety,Parking
+"go around the black car, there is enough room",Not Safety,routing
+"go up behind that black car, the one that is the last in the line on the left",Not Safety,routing
+park near that car up ahead on the left. ,Not Safety,Parking
+"my friend is in that car, follow them through the intersection.",Not Safety,traffic management
+get in the same lane as that vehicle.,Not Safety,traffic management
+pass that car on the right side.,Safety,traffic management
+"stop beside that silver car, my friends are in there. i want to see where they are going.",Not Safety,traffic management
+keep up with the car ahead until we get to our destination.,Not Safety,routing
+avoid the lane this car is getting in.,Safety,traffic management
+move up and get behind the gray car ahead of us,Not Safety,routing
+you need to keep following the car in front of us. ,Not Safety,routing
+turn left like the car before us,Not Safety,routing
+we need to turn right. but wait until the car coming from the other side has passed us. ,Not Safety,routing
+"oncoming traffic, yield to that car before turning right. ",Not Safety,traffic management
+"wait until that second vehicle passed us, then turn right.",Not Safety,routing
+"stop in our lane, but parallel to where that white car is now",Stop,traffic management
+stop right behind the silver car in front of us.,Stop,traffic management
+"my friends are in the silver car in front of us, follow it wherever it goes.",Not Safety,traffic management
+"car moving, go forward behind it.",Not Safety,routing
+stay still until the car ahead moves.,Safety,traffic management
+start moving once the car is a safe distance ahead.,Safety,traffic management
+remain one car length behind the vehicle ahead. ,Not Safety,routing
+get in the same lane as the vehicle before us.,Not Safety,traffic management
+turn left at the driveway where the light color car is.,Not Safety,routing
+speed up and follow the black coupe in the right lane.,Safety,traffic management
+that is mike's car on the left.     please follow him.,Not Safety,routing
+stay behind this car ,Not Safety,routing
+follow this car until the next light then turn right.,Not Safety,routing
+"turn left, down the street where that gray car is.",Not Safety,routing
+drive up next to this car.,Not Safety,routing
+get ahead of this car.,Not Safety,routing
+get ahead of this car and take a right turn.,Not Safety,routing
+get closer to the black car in the right lane.,Not Safety,routing
+follow the mazda,Not Safety,routing
+"careful, there is car coming onto the main road from the left. ",Safety,traffic management
+signal left and follow the black car,Not Safety,routing
+stop behind the black car,Stop,traffic management
+"that is the place, where that gray suv is coming out of. let these trucks pass, and turn left into that lot when it is safe",Safety,routing
+that is the place. turn into the parking garage in front of this white car on the right,Not Safety,routing
+park in the street somewhere behind that silver car,Not Safety,Parking
+speed up and get closer to the grey car in front of us,Safety,traffic management
+i think the entrance to the parking lot should be where this vehicle before us is right now,Not Safety,traffic management
+i have an appointment where this grey van is coming from. turn there please,Not Safety,traffic management
+turn right behind this parked car,Not Safety,routing
+pull up behind the car on the right side of the road. ,Not Safety,routing
+follow that minivan!,Not Safety,routing
+"if that white van turns left, follow him. ",Not Safety,routing
+turn left once this white car has passed. ,Not Safety,routing
+turn right and follow that mini-van,Not Safety,routing
+make a right hand turn following behind the gray station wagon,Not Safety,routing
+turn right following behind the gray mini van,Not Safety,routing
+make a left turn after the gray mini van passes ,Not Safety,routing
+make a left turn into the right lane following the white sedan,Not Safety,routing
+park next to that white suv up ahead,Not Safety,Parking
+"continue straight ahead, down the street where that jeep is parked on the left",Not Safety,routing
+follow  the white van when the light turns green. ,Safety,traffic management
+make a right turn once the black car passes.,Safety,routing
+go where that van is going.,Not Safety,routing
+go around the car in front of us.,Not Safety,routing
+merge into the adjacent lane to the left and pass this vehicle.,Safety,routing
+stop here and follow this car when it accelerates.,Stop,routing
+"proceed forward, remaining behind this car.",Not Safety,routing
+merge into the adjacent lane and follow that vehicle on the left.,Not Safety,traffic management
+move into the lane next to that vehicle on the left and match their speed.,Not Safety,traffic management
+"move into the adjacent lane next to that sliver vehicle on the left, speed up, and pass them.",Not Safety,traffic management
+change lanes before the car in front moves again,Safety,traffic management
+do not change lanes car passing on left,Safety,traffic management
+brake! the car in front suddenly stopped. ,Stop,traffic management
+"careful, the car in front of us is getting dangerously close. ",Stop,traffic management
+go around the silver car in front of us,Safety,traffic management
+get into the same lane as the black car.,Not Safety,routing
+make a you-turn a bit further down the street and follow my friend. he is driving the white sedan.,Not Safety,traffic management
+get behind the car on the right. ,Not Safety,routing
+stop parallel the white car up ahead,Stop,routing
+go past the black car in the right lane,Not Safety,traffic management
+ merge into the lane of this car.,Not Safety,traffic management
+change into the rightmost lane to get behind this black suv.,Safety,traffic management
+go around the car that is in front of us. ,Not Safety,traffic management
+"get in the left lane over, behind  the car that just passed us. ",Safety,routing
+go around the car in front of us,Not Safety,routing
+just go around this car. merge left when it is clear and continue down this street,Not Safety,routing
+please follow that black vehicle on the left.,Not Safety,routing
+please stay behind this vehicle and follow it.,Not Safety,routing
+wait for that car to pass before left turning.,Not Safety,routing
+"we can park over by that car, go straight ahead and make the second turn to the left.",Not Safety,Parking
+"wait for the white car to pass, then turn left.",Safety,traffic management
+go where the white car is please.,Not Safety,routing
+stop until the car has passed.,Stop,traffic management
+keep left to avoid the oncoming car.,Safety,routing
+park next to the car on the left.,Not Safety,Parking
+park next to that car,Not Safety,Parking
+park in front of the black car,Not Safety,Parking
+park next to the white car.,Not Safety,Parking
+"i need to call my boyfriend, pull over next to that white car.",Not Safety,Entertainment
+pull over next to that white sedan. ,Not Safety,traffic management
+stop right next to that car so i can see if it is occupied. ,Safety,routing
+ pull up behind that car closest to us so i can see if there is a good parking spot.,Not Safety,Parking
+park near the white car,Not Safety,Parking
+park beyond the car that is parked last. ,Not Safety,Parking
+"park inside this parking, near the white car",Not Safety,Parking
+park next to this car,Not Safety,Parking
+park behind that white van,Not Safety,Parking
+drop me off near the white car under the building.,Not Safety,traffic management
+it is raining! drop me ff near the car under the building.,Not Safety,traffic management
+get behind the black car,Not Safety,traffic management
+park before the first car here.,Not Safety,Parking
+keep distance from vehicle on the left side ,Safety,traffic management
+park parallel to the parked cars on the right ,Not Safety,Parking
+park behind the vehicle ahead ,Not Safety,Parking
+we should turn right like the car in front of us.,Not Safety,traffic management
+park the car somewhere past the row of vehicles on the right.,Not Safety,Parking
+"watch out for the car on the right, they could turn into your lane. ",Safety,traffic management
+"turn right, after the car just ahead of you has passed.",Safety,traffic management
+turn left before that car gets to us.,Safety,traffic management
+turn right and drop me off next to that silver car.,Not Safety,routing
+"stop next to that car, i want to talk with the driver",Not Safety,Entertainment
+keep to the right. the gray parked car on the left could pull out.,Not Safety,Parking
+turn right and park near the gray car.,Not Safety,Parking
+"when the light turns green, see if you can park next to that car up ahead on the left. ",Safety,traffic management
+quickly follow the car that is turning left. ,Not Safety,routing
+"get over to that car on the left, parked in between the trees. ",Safety,Parking
+turn left and follow that gray vehicle.,Not Safety,routing
+parallel park behind that white car up there ,Not Safety,Parking
+follow the white car,Not Safety,routing
+"you know what, just follow that white car turning right. we can get to our destination that way as well. ",Not Safety,routing
+turn right to follow this car,Not Safety,routing
+quickly follow that white car up ahead. it belongs to my friend and he is going to the same place as we are. ,Not Safety,routing
+turn left where the red car is.,Not Safety,routing
+continue straight past the black jeep.,Not Safety,routing
+park next to the white mini van.,Not Safety,Parking
+"right there, where that jeep is pulling out right now, that is the parking garage. drive there.",Not Safety,Parking
+see if we can park someplace behind the red car to the left.,Not Safety,Parking
+he told me he would be in a red car waiting for us. i think i see it across the street. get to that car!,Not Safety,Entertainment
+follow that car driving up ahead.,Not Safety,Routing
+park behind the white car,Not Safety,Parking
+follow the red car coming from the left at the intersection.,Safety,Routing
+park behind the white suv,Not safety,Parking
+turn right at the intersection where you can see the car coming from the left. ,Safety,Routing
+let the car on the left go through the intersection first.,Safety,Routing
+park behind the white suv on the right.,Not Safety,Parking
+follow the back car direct in front,Not Safety,Stop
+park in the space behind the white car to your right.,Not Safety,Parking
+turn left after the back car passes by us.,Not Safety,Routing
+"i think that is my boss car, turn left and stop beside it",Stop,Stop
