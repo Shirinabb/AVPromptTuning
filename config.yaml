@@ -1,0 +1,19 @@
+
+paths:
+  input_csv: data/sample_commands.csv
+  augmented_jsonl: data/augmented.jsonl
+  audio_out: data/audio
+  noise_dir: data/noise
+  bert_out: models/out_bert
+  reports: reports
+
+training:
+  batch_size: 16
+  lr: 2e-5
+  epochs: 3
+  max_len: 128
+  model_name: bert-base-uncased
+
+prompting:
+  alpha_safety: 0.7
+  beta_urgency: 0.3
