@@ -1,19 +1,30 @@
+# ===========================
+# CONFIG FILE for AVPromptTuning
+# ===========================
 
-paths:
-  input_csv: data/sample_commands.csv
-  augmented_jsonl: data/augmented.jsonl
-  audio_out: data/audio
-  noise_dir: data/noise
-  bert_out: models/out_bert
-  reports: reports
-
-training:
-  batch_size: 16
-  lr: 2e-5
+general:
   epochs: 3
+  batch_size: 8
+  lr: 2e-5
   max_len: 128
-  model_name: bert-base-uncased
+  num_labels: 4
+  eval_steps: 100
+  seed_base: 42
+  device: "cuda"   # or "cpu"
+  save_dir: "results/"
 
-prompting:
-  alpha_safety: 0.7
-  beta_urgency: 0.3
+models:
+  bert:
+    pretrained: "bert-base-uncased"
+  gpt2:
+    pretrained: "gpt2"
+  salmon:
+    pretrained: "bert-base-uncased"   # placeholder; adjust to real model
+  salmonn:
+    pretrained: "bert-base-uncased"   # placeholder; adjust if available
+
+modes:
+  - baseline
+  - context
+  - prioritize
+  - full
