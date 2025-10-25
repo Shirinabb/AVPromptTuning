@@ -14,7 +14,7 @@ def set_seed(seed: int):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-    # deterministic=False تا روی CPU کند نشود
+    # deterministic=False
     torch.use_deterministic_algorithms(False)
     os.environ["PYTHONHASHSEED"] = str(seed)
 
@@ -27,11 +27,10 @@ class CommandDataset(Dataset):
         for _, row in df.iterrows():
             text = str(row["command_text"])
             if mode in ["context", "full"]:
-                # می‌تونی بجای context_text از context_tags هم استفاده کنی
                 text += " " + str(row.get("context_text", ""))
             self.texts.append(text)
 
-        # برچسب‌ها: 4 کلاس
+        # Lablig
         self.labels = df["target_label"].astype("category").cat.codes.values
         self.priority = df["priority_score"].astype(float).values
 
@@ -190,3 +189,4 @@ if __name__ == "__main__":
     out_csv = os.path.join(cfg["general"]["save_dir"], "results_table7_reproduced.csv")
     pd.DataFrame(results).to_csv(out_csv, index=False)
     print(f"\n✅ All results saved to {out_csv}")
+
