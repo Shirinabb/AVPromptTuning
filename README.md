@@ -9,6 +9,7 @@ The dataset included here is a small synthetic subset inspired by the Talk2Car c
 
 
 ##  How to Run
+#please config the salmon setting
 ```bash
 pip install -r requirements.txt
 python src/train.py --config config.yaml --train_path data/train_mimic2000_hist.csv --test_path data/test_mimic40_hist.csv
