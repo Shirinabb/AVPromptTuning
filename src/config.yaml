@@ -5,12 +5,12 @@
 general:
   epochs: 3
   batch_size: 8
-  lr: 2e-5          # عدد، نه رشته
+  lr: 2e-5          
   max_len: 128
   num_labels: 4
   eval_steps: 100
   seed_base: 42
-  device: "auto"    # "auto" یا "cpu" یا "cuda"
+  device: "auto"    
   save_dir: "results/"
 
 models:
@@ -18,13 +18,14 @@ models:
     pretrained: "bert-base-uncased"
   gpt2:
     pretrained: "gpt2"
-  salmon:            # placeholder; اگر مدل واقعی دارید، نامش را بگذارید
-    pretrained: "bert-base-uncased"
-  salmonn:           # placeholder؛ در صورت نبود می‌توانید موقت حذفش کنید
-    pretrained: "bert-base-uncased"
+  salmon:            
+    pretrained: "bert-base-uncased" #Based on the Version
+  salmonn:          
+    pretrained: "bert-base-uncased"  #Based on the Version
 
 modes:
   - baseline
   - context
   - prioritize
   - full
+
