@@ -1,8 +1,10 @@
-The dataset used in this study was derived from the public Talk2Car_Command corpus, with each driving instruction manually labeled as Safe or Unsafe to form a custom subset and different lables for environmental conditions.
-The model was trained on approximately 1000-1200 labeled commands and evaluated on a randomly selected test subset of 50 prompts, balanced across classes.
+# AVPromptTuning
 
-These results (≈ 95–98 % F1/Accuracy) reflect the controlled, low-noise nature of this test set rather than large-scale generalization.
-This configuration was intentionally designed to validate the feasibility of context-aware prompt engineering in reproducible conditions.
+This repository provides training and evaluation scripts 
+for context-aware and priority-aware prompt tuning of transformer models.  
+Example datasets are included for demonstration and educational purposes.
 
-Future work will include expanding the test corpus and releasing an open benchmark for broader robustness testing.
-All reported metrics are internally consistent and reproducible via the provided scripts.
+## How to Run
+```bash
+pip install -r requirements.txt
+python src/train.py --config config.yaml --train_path data/train_mimic2000_hist.csv --test_path data/test_mimic40_hist.csv
