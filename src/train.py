@@ -14,7 +14,6 @@ def set_seed(seed: int):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-    # deterministic=False تا روی CPU کند نشود
     torch.use_deterministic_algorithms(False)
     os.environ["PYTHONHASHSEED"] = str(seed)
 
@@ -27,13 +26,12 @@ class CommandDataset(Dataset):
         for _, row in df.iterrows():
             text = str(row["command_text"])
             if mode in ["context", "full"]:
-                # می‌تونی بجای context_text از context_tags هم استفاده کنی
                 ctx = str(row.get("context_text", "")).strip()
                 if ctx:
                     text += " " + ctx
             self.texts.append(text)
 
-        # استفاده از نگاشت لیبل ثابت‌شده
+        # Labling
         self.labels = df["label_id"].astype(int).values
         self.priority = df["priority_score"].astype(float).values
 
@@ -92,8 +90,6 @@ def train_one_model(df_train, df_test, model_name, mode, cfg):
     optimizer = AdamW(model.parameters(), lr=float(cfg["general"]["lr"]))
     total_steps = len(train_dl) * int(cfg["general"]["epochs"])
     scheduler = get_linear_schedule_with_warmup(optimizer, 0, total_steps)
-
-    # یک criterion برای per-sample loss (داخل گراف، بدون no_grad)
     criterion_none = torch.nn.CrossEntropyLoss(reduction="none")
 
     # ----- TRAIN
@@ -110,7 +106,6 @@ def train_one_model(df_train, df_test, model_name, mode, cfg):
             outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
 
             if mode in ["prioritize", "full"]:
-                # per-sample CE داخل گراف
                 per_sample_loss = criterion_none(outputs.logits, labels)     # [B]
                 loss = (per_sample_loss * (0.5 + pri)).mean()                # scalar
             else:
@@ -170,18 +165,13 @@ if __name__ == "__main__":
         device = cfg["general"]["device"]
     cfg["general"]["device"] = device
     print(f">>> Device selected: {device}")
-
     # Load datasets
     df_train = pd.read_csv(args.train_path)
     df_test  = pd.read_csv(args.test_path)
-
-    # --- ثابت کردن نگاشت لیبل‌ها (جلوگیری از اختلاف کدگذاری category)
     label_order = ["ROUTING","PARKING","TRAFFIC_MGMT","ENTERTAINMENT"]
     label2id = {lab:i for i,lab in enumerate(label_order)}
     df_train["label_id"] = df_train["target_label"].map(label2id)
     df_test["label_id"]  = df_test["target_label"].map(label2id)
-
-    # اعتبارسنجی نبودن NaN در label_id
     if df_train["label_id"].isna().any() or df_test["label_id"].isna().any():
         unknown = set(df_train.loc[df_train["label_id"].isna(),"target_label"].unique().tolist()
                       + df_test.loc[df_test["label_id"].isna(),"target_label"].unique().tolist())
@@ -208,3 +198,4 @@ if __name__ == "__main__":
     out_csv = os.path.join(cfg["general"]["save_dir"], "results_table7_reproduced.csv")
     pd.DataFrame(results).to_csv(out_csv, index=False)
     print(f"\n✅ All results saved to {out_csv}")
+
