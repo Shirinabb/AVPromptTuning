@@ -23,21 +23,27 @@ def set_seed(seed: int):
 class CommandDataset(Dataset):
     def __init__(self, df: pd.DataFrame, tokenizer, max_len: int, mode: str):
         self.texts = []
+        context_attached = 0
+
         for _, row in df.iterrows():
             text = str(row["command_text"])
+
             if mode in ["context", "full"]:
-                ctx = str(row.get("context_text", "")).strip()
+                ctx = str(row.get("context_text", "") or row.get("context_tags", "")).strip()
                 if ctx:
                     text += " " + ctx
+                    context_attached += 1
+
             self.texts.append(text)
 
-        # Labling
-        self.labels = df["label_id"].astype(int).values
+        if mode in ["context", "full"]:
+            print(f"[SANITY] Context attached to {context_attached}/{len(df)} samples in mode={mode}")
+        self.labels   = df["label_id"].astype(int).values
         self.priority = df["priority_score"].astype(float).values
 
         self.tokenizer = tokenizer
-        self.max_len = int(max_len)
-        self.mode = mode
+        self.max_len   = int(max_len)
+        self.mode      = mode
 
     def __len__(self):
         return len(self.texts)
@@ -75,8 +81,6 @@ def train_one_model(df_train, df_test, model_name, mode, cfg):
         pretrained_name,
         num_labels=int(cfg["general"]["num_labels"])
     ).to(device)
-
-    # اگر GPT-2 است، pad_token_id را ست کن تا warning نده
     if hasattr(model.config, "pad_token_id") and model.config.pad_token_id is None and tokenizer.pad_token_id is not None:
         model.config.pad_token_id = tokenizer.pad_token_id
 
@@ -90,12 +94,14 @@ def train_one_model(df_train, df_test, model_name, mode, cfg):
     optimizer = AdamW(model.parameters(), lr=float(cfg["general"]["lr"]))
     total_steps = len(train_dl) * int(cfg["general"]["epochs"])
     scheduler = get_linear_schedule_with_warmup(optimizer, 0, total_steps)
-    criterion_none = torch.nn.CrossEntropyLoss(reduction="none")
+
+    criterion_none = torch.nn.CrossEntropyLoss(reduction="none")  # برای per-sample loss
 
     # ----- TRAIN
     for epoch in range(int(cfg["general"]["epochs"])):
         model.train()
         loop = tqdm(train_dl, desc=f"{model_name}-{mode} | epoch {epoch+1}")
+
         for batch in loop:
             optimizer.zero_grad()
             input_ids      = batch["input_ids"].to(device)
@@ -106,10 +112,18 @@ def train_one_model(df_train, df_test, model_name, mode, cfg):
             outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
 
             if mode in ["prioritize", "full"]:
+                # per-sample CE داخل گراف
                 per_sample_loss = criterion_none(outputs.logits, labels)     # [B]
-                loss = (per_sample_loss * (0.5 + pri)).mean()                # scalar
+                # وزن‌ها: 0.5 + priority (فرض: priority∈[0,1]) → [0.5..1.5]
+                w = 0.5 + pri
+                w = w / (w.mean().clamp_min(1e-8))
+
+                if (w.std().item() < 1e-4):
+                    print("[WARN] priority weights ~constant; prioritize may match baseline.")
+
+                loss = (per_sample_loss * w).mean()
             else:
-                loss = outputs.loss                                          # mean CE
+                loss = outputs.loss  # mean CE
 
             loss.backward()
             optimizer.step()
@@ -165,17 +179,29 @@ if __name__ == "__main__":
         device = cfg["general"]["device"]
     cfg["general"]["device"] = device
     print(f">>> Device selected: {device}")
+
     # Load datasets
     df_train = pd.read_csv(args.train_path)
     df_test  = pd.read_csv(args.test_path)
+
     label_order = ["ROUTING","PARKING","TRAFFIC_MGMT","ENTERTAINMENT"]
     label2id = {lab:i for i,lab in enumerate(label_order)}
     df_train["label_id"] = df_train["target_label"].map(label2id)
     df_test["label_id"]  = df_test["target_label"].map(label2id)
+
+ 
     if df_train["label_id"].isna().any() or df_test["label_id"].isna().any():
         unknown = set(df_train.loc[df_train["label_id"].isna(),"target_label"].unique().tolist()
                       + df_test.loc[df_test["label_id"].isna(),"target_label"].unique().tolist())
         raise ValueError(f"Unknown target_label(s) found: {unknown}. Expected one of {label_order}")
+
+    if "command_text" in df_train.columns:
+        base_len = df_train["command_text"].astype(str).str.split().str.len().mean()
+        if df_train.get("context_text") is not None and df_train["context_text"].notna().any():
+            ctx_len = (df_train["command_text"].astype(str) + " " + df_train["context_text"].fillna("")).str.split().str.len().mean()
+        else:
+            ctx_len = (df_train["command_text"].astype(str) + " " + df_train.get("context_tags", pd.Series([""]*len(df_train))).fillna("")).str.split().str.len().mean()
+        print(f"[SANITY] Avg tokens baseline≈{base_len:.1f} | with-context≈{ctx_len:.1f}")
 
     # Train/Eval
     os.makedirs(cfg["general"]["save_dir"], exist_ok=True)
@@ -198,4 +224,3 @@ if __name__ == "__main__":
     out_csv = os.path.join(cfg["general"]["save_dir"], "results_table7_reproduced.csv")
     pd.DataFrame(results).to_csv(out_csv, index=False)
     print(f"\n✅ All results saved to {out_csv}")
-
