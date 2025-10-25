@@ -14,7 +14,7 @@ def set_seed(seed: int):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-    # deterministic=False
+    # deterministic=False تا روی CPU کند نشود
     torch.use_deterministic_algorithms(False)
     os.environ["PYTHONHASHSEED"] = str(seed)
 
@@ -27,11 +27,14 @@ class CommandDataset(Dataset):
         for _, row in df.iterrows():
             text = str(row["command_text"])
             if mode in ["context", "full"]:
-                text += " " + str(row.get("context_text", ""))
+                # می‌تونی بجای context_text از context_tags هم استفاده کنی
+                ctx = str(row.get("context_text", "")).strip()
+                if ctx:
+                    text += " " + ctx
             self.texts.append(text)
 
-        # Lablig
-        self.labels = df["target_label"].astype("category").cat.codes.values
+        # استفاده از نگاشت لیبل ثابت‌شده
+        self.labels = df["label_id"].astype(int).values
         self.priority = df["priority_score"].astype(float).values
 
         self.tokenizer = tokenizer
@@ -59,7 +62,7 @@ class CommandDataset(Dataset):
 # ---------------------------
 # Train/Eval for one (model, mode)
 # ---------------------------
-def train_one_model(args, df_train, df_test, model_name, mode, cfg):
+def train_one_model(df_train, df_test, model_name, mode, cfg):
     device = cfg["general"]["device"]
     set_seed(int(cfg["general"]["seed_base"]))
 
@@ -75,6 +78,10 @@ def train_one_model(args, df_train, df_test, model_name, mode, cfg):
         num_labels=int(cfg["general"]["num_labels"])
     ).to(device)
 
+    # اگر GPT-2 است، pad_token_id را ست کن تا warning نده
+    if hasattr(model.config, "pad_token_id") and model.config.pad_token_id is None and tokenizer.pad_token_id is not None:
+        model.config.pad_token_id = tokenizer.pad_token_id
+
     train_ds = CommandDataset(df_train, tokenizer, cfg["general"]["max_len"], mode)
     test_ds  = CommandDataset(df_test,  tokenizer, cfg["general"]["max_len"], mode)
 
@@ -86,28 +93,28 @@ def train_one_model(args, df_train, df_test, model_name, mode, cfg):
     total_steps = len(train_dl) * int(cfg["general"]["epochs"])
     scheduler = get_linear_schedule_with_warmup(optimizer, 0, total_steps)
 
+    # یک criterion برای per-sample loss (داخل گراف، بدون no_grad)
+    criterion_none = torch.nn.CrossEntropyLoss(reduction="none")
+
     # ----- TRAIN
     for epoch in range(int(cfg["general"]["epochs"])):
         model.train()
         loop = tqdm(train_dl, desc=f"{model_name}-{mode} | epoch {epoch+1}")
         for batch in loop:
             optimizer.zero_grad()
-            input_ids     = batch["input_ids"].to(device)
-            attention_mask= batch["attention_mask"].to(device)
-            labels        = batch["labels"].to(device)
-            pri           = batch["priority"].to(device)
+            input_ids      = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+            labels         = batch["labels"].to(device)
+            pri            = batch["priority"].to(device)  # [B], float
 
             outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-            # base CE loss (batch avg)
-            loss = outputs.loss
 
-            # priority-weighted loss
             if mode in ["prioritize", "full"]:
-                with torch.no_grad():
-                    per_sample_loss = torch.nn.functional.cross_entropy(
-                        outputs.logits, labels, reduction="none"
-                    )
-                loss = (per_sample_loss * (0.5 + pri)).mean()
+                # per-sample CE داخل گراف
+                per_sample_loss = criterion_none(outputs.logits, labels)     # [B]
+                loss = (per_sample_loss * (0.5 + pri)).mean()                # scalar
+            else:
+                loss = outputs.loss                                          # mean CE
 
             loss.backward()
             optimizer.step()
@@ -168,13 +175,25 @@ if __name__ == "__main__":
     df_train = pd.read_csv(args.train_path)
     df_test  = pd.read_csv(args.test_path)
 
+    # --- ثابت کردن نگاشت لیبل‌ها (جلوگیری از اختلاف کدگذاری category)
+    label_order = ["ROUTING","PARKING","TRAFFIC_MGMT","ENTERTAINMENT"]
+    label2id = {lab:i for i,lab in enumerate(label_order)}
+    df_train["label_id"] = df_train["target_label"].map(label2id)
+    df_test["label_id"]  = df_test["target_label"].map(label2id)
+
+    # اعتبارسنجی نبودن NaN در label_id
+    if df_train["label_id"].isna().any() or df_test["label_id"].isna().any():
+        unknown = set(df_train.loc[df_train["label_id"].isna(),"target_label"].unique().tolist()
+                      + df_test.loc[df_test["label_id"].isna(),"target_label"].unique().tolist())
+        raise ValueError(f"Unknown target_label(s) found: {unknown}. Expected one of {label_order}")
+
     # Train/Eval
     os.makedirs(cfg["general"]["save_dir"], exist_ok=True)
     results = []
     for model_name in cfg["models"].keys():
         for mode in cfg["modes"]:
             print(f"\n=== Training {model_name} - {mode} ===")
-            acc, prec, rec, f1 = train_one_model(args, df_train, df_test, model_name, mode, cfg)
+            acc, prec, rec, f1 = train_one_model(df_train, df_test, model_name, mode, cfg)
             row = {
                 "model": model_name,
                 "mode": mode,
@@ -189,4 +208,3 @@ if __name__ == "__main__":
     out_csv = os.path.join(cfg["general"]["save_dir"], "results_table7_reproduced.csv")
     pd.DataFrame(results).to_csv(out_csv, index=False)
     print(f"\n✅ All results saved to {out_csv}")
-
