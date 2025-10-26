@@ -233,6 +233,6 @@ if __name__ == "__main__":
             print(f"✅ {model_name}-{mode} | Acc={row['accuracy_mean']:.2f}±{row['accuracy_std']:.2f}  "
                   f"F1={row['f1_mean']:.2f}±{row['f1_std']:.2f}")
 
-    out_csv = os.path.join(cfg["general"]["save_dir"], "results_table_reproduced.csv")
+    out_csv = os.path.join(cfg["general"]["save_dir"], "results_table7_reproduced.csv")
     pd.DataFrame(results).to_csv(out_csv, index=False)
     print(f"\n✅ All results saved to {out_csv}")
