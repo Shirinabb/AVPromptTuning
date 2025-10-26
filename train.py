@@ -1,381 +1,263 @@
-import os, json, argparse, random, time
-from typing import List, Dict, Any
-import numpy as np
+import os, random, argparse, yaml, numpy as np, pandas as pd, hashlib
+from tqdm import tqdm
 import torch
-import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
-from transformers import (
-    AutoTokenizer,
-    BertForSequenceClassification,
-    GPT2ForSequenceClassification,
-    get_linear_schedule_with_decay
-)
-
-from models.salmon import Salmon, SalmonConfig
-from models.salmonn import SalmonN, SalmonNConfig
-
-def set_seed(seed: int = 42):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-class JsonlTextDataset(Dataset):
-    """
-    - text: str
-    - label: str (یا int)
-    - context_tags: List[str] (Optional)
-    """
-    def __init__(self, path: str, label2id: Dict[str, int] = None):
-        self.items = []
-        with open(path, "r", encoding="utf8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                obj = json.loads(line)
-                self.items.append(obj)
-        if label2id is None:
-            labels = sorted(list({it["label"] for it in self.items}))
-            self.label2id = {lbl: i for i, lbl in enumerate(labels)}
-        else:
-            self.label2id = label2id
-
-    def __len__(self):
-        return len(self.items)
-
-    def __getitem__(self, idx):
-        x = self.items[idx]
-        text = x["text"]
-        label = x["label"]
-        label_id = self.label2id[label] if isinstance(label, str) else int(label)
-        ctx_tags = x.get("context_tags", [])
-        return {
-            "text": text,
-            "label": label_id,
-            "context_tags": ctx_tags
-        }
-def load_context_vocab(path: str) -> Dict[str, int]:
-    if not path or (not os.path.exists(path)):
-        return {"_PAD": 0}
-    with open(path, "r", encoding="utf8") as f:
-        tags = json.load(f)  # ["RAIN","FOG",...]
-    return {t: i for i, t in enumerate(tags)}
-def build_collate(tokenizer, ctx_vocab: Dict[str, int], max_len: int = 128):
-    def _collate(batch: List[Dict[str, Any]]):
-        texts = [b["text"] for b in batch]
-        toks = tokenizer(
-            texts,
-            padding=True,
-            truncation=True,
-            max_length=max_len,
-            return_tensors="pt"
-        )
-        # context_tags → indices (pad = -1)
-        max_tags = max(len(b.get("context_tags", [])) for b in batch) if batch else 1
-        ctx_ids = []
-        for b in batch:
-            ids = [ctx_vocab.get(t, 0) for t in b.get("context_tags", [])]
-            ids = ids + [-1] * (max_tags - len(ids))
-            ctx_ids.append(ids)
-        ctx_ids = torch.tensor(ctx_ids, dtype=torch.long)
-        labels = torch.tensor([b["label"] for b in batch], dtype=torch.long)
-        return {
-            "input_ids": toks["input_ids"],
-            "attention_mask": toks["attention_mask"],
-            "context_tag_ids": ctx_ids,
-            "labels": labels,
-            "_raw_ctx_tags": [b.get("context_tags", []) for b in batch]
-        }
-    return _collate
-def build_model(args, num_labels: int, ctx_vocab: Dict[str, int]):
-    if args.model == "salmon":
-        cfg = SalmonConfig(
-            pretrained_name=args.pretrained_name,
-            num_labels=num_labels,
-            ctx_dim=args.ctx_dim,
-            dropout=args.dropout,
-            ctx_vocab=ctx_vocab,
-            use_context=not args.ctx_off
-        )
-        model = Salmon(cfg)
-        tok = model.tokenizer
-
-    elif args.model == "salmonn":
-        cfg = SalmonNConfig(
-            text_backbone=args.pretrained_name,
-            num_labels=num_labels,
-            ctx_dim=args.ctx_dim,
-            dropout=args.dropout,
-            ctx_vocab=ctx_vocab,
-            soft_prompt_len=args.soft_prompt_len,
-            use_context=not args.ctx_off,
-            use_soft_prompt=not args.no_soft
-        )
-        model = SalmonN(cfg)
-        tok = model.tokenizer
-
-    elif args.model == "bert":
-        tok = AutoTokenizer.from_pretrained(args.pretrained_name)
-        model = BertForSequenceClassification.from_pretrained(
-            args.pretrained_name, num_labels=num_labels
-        )
-
-    elif args.model == "gpt2":
-        tok = AutoTokenizer.from_pretrained("gpt2")
-        if tok.pad_token is None:
-            tok.pad_token = tok.eos_token
-        model = GPT2ForSequenceClassification.from_pretrained(
-            "gpt2", num_labels=num_labels
-        )
-        model.config.pad_token_id = tok.pad_token_id
-    else:
-        raise ValueError(f"Unknown model: {args.model}")
-
-    return model, tok
-def make_sample_weights(labels: torch.Tensor,
-                        batch_raw_ctx_tags: List[List[str]],
-                        safety_class_id: int,
-                        prior_on: bool,
-                        alpha: float,
-                        beta: float,
-                        urgency_tags: List[str]) -> torch.Tensor:
-    B = labels.size(0)
-    w = torch.ones(B, dtype=torch.float, device=labels.device)
-    if not prior_on:
-        return w
-    for i in range(B):
-        if labels[i].item() == safety_class_id:
-            w[i] += alpha
-        tags = set(batch_raw_ctx_tags[i] or [])
-        if any(t in tags for t in urgency_tags):
-            w[i] += beta
-    return w
+from torch.optim import AdamW
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, get_linear_schedule_with_warmup
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
-def compute_metrics(y_true, y_pred):
-    acc = accuracy_score(y_true, y_pred)
-    p, r, f1, _ = precision_recall_fscore_support(
-        y_true, y_pred, average="macro", zero_division=0
-    )
-    return {"accuracy": acc, "precision": p, "recall": r, "f1": f1}
 
-def save_row_csv(path: str, row: Dict[str, Any]):
-    import pandas as pd
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    if os.path.exists(path):
-        df = pd.read_csv(path)
-        df = pd.concat([df, pd.DataFrame([row])], ignore_index=True)
-    else:
-        import pandas as pd
-        df = pd.DataFrame([row])
-    df.to_csv(path, index=False)
-def train_one_epoch(model, loader, optimizer, scheduler, device, args, safety_class_id, urgency_tags):
-    model.train()
-    tr_loss, n_steps = 0.0, 0
-    for batch in loader:
-        batch_dev = {
-            k: (v.to(device) if torch.is_tensor(v) else v)
-            for k, v in batch.items()
+# ---------------------------
+# Utils
+# ---------------------------
+def set_seed(seed: int):
+    random.seed(seed); np.random.seed(seed)
+    torch.manual_seed(seed); torch.cuda.manual_seed_all(seed)
+    torch.use_deterministic_algorithms(False)
+    os.environ["PYTHONHASHSEED"] = str(seed)
+
+def sha(lst):
+    return hashlib.sha256("\n".join(lst).encode("utf-8")).hexdigest()
+
+# ---------------------------
+# Dataset
+# ---------------------------
+class CommandDataset(Dataset):
+    def __init__(self, df: pd.DataFrame, tokenizer, max_len: int, mode: str,
+                 ctx_field: str | None = None, ctx_pos: str = "append"):
+        texts, context_attached = [], 0
+        ctx_pos = (ctx_pos or "append").lower()
+
+        for _, row in df.iterrows():
+            cmd = str(row["command_text"])
+            t = cmd
+            if mode in ["context", "full"]:
+                # انتخاب منبع کانتکست
+                if ctx_field:
+                    ctx = str(row.get(ctx_field, "")).strip()
+                    if not ctx:
+                        alt = "context_tags" if ctx_field == "context_text" else "context_text"
+                        ctx = str(row.get(alt, "")).strip()
+                else:
+                    ctx = str(row.get("context_text","") or row.get("context_tags","")).strip()
+
+                if ctx:
+                    if ctx_pos == "prepend":
+                        t = f"[CTX] {ctx} [CMD] {cmd}"
+                    else:  # append (مثل مقاله)
+                        t = f"{cmd} {ctx}"
+                    context_attached += 1
+
+            texts.append(t)
+
+        if mode in ["context", "full"]:
+            print(f"[SANITY] Context attached to {context_attached}/{len(df)} samples in mode={mode}")
+
+        self.raw_texts = texts
+        enc = tokenizer(texts, padding="max_length", truncation=True,
+                        max_length=int(max_len), return_tensors="pt")
+        self.input_ids = enc["input_ids"]
+        self.attn_mask = enc["attention_mask"]
+        self.labels    = torch.tensor(df["label_id"].astype(int).values, dtype=torch.long)
+        self.priority  = torch.tensor(df["priority_score"].astype(float).values, dtype=torch.float)
+
+    def __len__(self): return self.input_ids.size(0)
+    def __getitem__(self, idx):
+        return {
+            "input_ids":      self.input_ids[idx],
+            "attention_mask": self.attn_mask[idx],
+            "labels":         self.labels[idx],
+            "priority":       self.priority[idx],
         }
-        fwd_kwargs = {}
-        if args.model in ("salmon", "salmonn"):
-            fwd_kwargs["use_context"] = (not args.ctx_off)
-        if args.model == "salmonn":
-            fwd_kwargs["use_soft_prompt"] = (not args.no_soft)
-        out = model(
-            input_ids=batch_dev["input_ids"],
-            attention_mask=batch_dev["attention_mask"],
-            context_tag_ids=batch_dev["context_tag_ids"],
-            labels=batch_dev["labels"],
-            **fwd_kwargs
-        )
 
-        logits = out["logits"]
-        labels = batch_dev["labels"]
-        weights = make_sample_weights(
-            labels=labels,
-            batch_raw_ctx_tags=batch["_raw_ctx_tags"],
-            safety_class_id=safety_class_id,
-            prior_on=args.prior_on,
-            alpha=args.alpha,
-            beta=args.beta,
-            urgency_tags=urgency_tags
-        )
+# ---------------------------
+# Train/Eval for one (model, mode, seed)
+# ---------------------------
+def train_one_model(df_train, df_test, model_name, mode, cfg):
+    device = cfg["general"]["device"]
+    seed_eff = int(cfg["general"]["seed_base"])
+    set_seed(seed_eff)
+    print(f">>> Effective seed: {seed_eff}")
 
-        loss_per = nn.functional.cross_entropy(logits, labels, reduction="none")
-        loss = (loss_per * weights).mean()
+    pretrained = cfg["models"][model_name]["pretrained"]
+    tokenizer = AutoTokenizer.from_pretrained(pretrained)
+    if "gpt2" in pretrained and tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
 
-        optimizer.zero_grad(set_to_none=True)
-        loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-        optimizer.step()
-        if scheduler is not None:
-            scheduler.step()
+    model = AutoModelForSequenceClassification.from_pretrained(
+        pretrained, num_labels=int(cfg["general"]["num_labels"])
+    ).to(device)
+    if hasattr(model.config, "pad_token_id") and model.config.pad_token_id is None and tokenizer.pad_token_id is not None:
+        model.config.pad_token_id = tokenizer.pad_token_id
 
-        tr_loss += loss.item()
-        n_steps += 1
+    ctx_field = cfg["general"].get("context_field", None)
+    ctx_pos   = cfg["general"].get("context_position", "append")
 
-    return tr_loss / max(1, n_steps)
+    # Hash check (baseline vs mode) روی متن خام
+    def build_texts(df, m):
+        out = []
+        for _, row in df.iterrows():
+            cmd = str(row["command_text"])
+            if m in ["context","full"]:
+                if ctx_field:
+                    ctx = str(row.get(ctx_field,"")).strip() or str(row.get("context_tags","")).strip()
+                else:
+                    ctx = str(row.get("context_text","") or row.get("context_tags","")).strip()
+                if ctx:
+                    t = f"[CTX] {ctx} [CMD] {cmd}" if ctx_pos=="prepend" else f"{cmd} {ctx}"
+                else:
+                    t = cmd
+            else:
+                t = cmd
+            out.append(t)
+        return out
 
-@torch.no_grad()
-def evaluate(model, loader, device, args, safety_class_id):
+    if mode in ["context","full"]:
+        same_train = (sha(build_texts(df_train, "baseline")) == sha(build_texts(df_train, mode)))
+        same_test  = (sha(build_texts(df_test,  "baseline")) == sha(build_texts(df_test,  mode)))
+        print(f"[HASH] train same? {same_train} | test same? {same_test}")
+        if same_train or same_test:
+            print("[WARN] Baseline and Context texts identical after preprocessing (context ineffective).")
+
+    # Datasets & Loaders
+    train_ds = CommandDataset(df_train, tokenizer, cfg["general"]["max_len"], mode, ctx_field=ctx_field, ctx_pos=ctx_pos)
+    test_ds  = CommandDataset(df_test,  tokenizer, cfg["general"]["max_len"], mode, ctx_field=ctx_field, ctx_pos=ctx_pos)
+
+    pin = (device == "cuda")
+    train_dl = DataLoader(train_ds, batch_size=int(cfg["general"]["batch_size"]), shuffle=True,  pin_memory=pin)
+    test_dl  = DataLoader(test_ds,  batch_size=int(cfg["general"]["batch_size"]), shuffle=False, pin_memory=pin)
+
+    optimizer = AdamW(model.parameters(), lr=float(cfg["general"]["lr"]))
+    total_steps = len(train_dl) * int(cfg["general"]["epochs"])
+    scheduler = get_linear_schedule_with_warmup(optimizer, 0, total_steps)
+
+    criterion_none = torch.nn.CrossEntropyLoss(reduction="none")
+    alpha = float(cfg["general"].get("alpha_priority", 0.35))
+
+    # TRAIN
+    for epoch in range(int(cfg["general"]["epochs"])):
+        model.train()
+        loop = tqdm(train_dl, desc=f"{model_name}-{mode} | epoch {epoch+1}")
+        for batch in loop:
+            optimizer.zero_grad()
+            input_ids      = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+            labels         = batch["labels"].to(device)
+            pri            = batch["priority"].to(device)
+
+            outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
+
+            if mode in ["prioritize","full"]:
+                per_sample_loss = criterion_none(outputs.logits, labels)  # [B]
+                # وزن‌دهی حول 1 با شدت قابل‌تنظیم
+                pri_centered = pri - pri.mean()
+                w = 1.0 + alpha * pri_centered
+                w = torch.clamp(w, 0.5, 1.5)
+                loss = (per_sample_loss * w).mean()
+            else:
+                loss = outputs.loss
+
+            loss.backward()
+            optimizer.step(); scheduler.step()
+            loop.set_postfix(loss=float(loss))
+
+    # EVAL
     model.eval()
-    y_true, y_pred = [], []
-    aux_gate_means = []
+    preds, trues = [], []
+    with torch.no_grad():
+        for batch in test_dl:
+            input_ids      = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+            labels         = batch["labels"].to(device)
+            outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+            preds.extend(torch.argmax(outputs.logits, dim=1).cpu().numpy())
+            trues.extend(labels.cpu().numpy())
 
-    for batch in loader:
-        batch_dev = {
-            k: (v.to(device) if torch.is_tensor(v) else v)
-            for k, v in batch.items()
-        }
-        fwd_kwargs = {}
-        if args.model in ("salmon", "salmonn"):
-            fwd_kwargs["use_context"] = (not args.ctx_off)
-        if args.model == "salmonn":
-            fwd_kwargs["use_soft_prompt"] = (not args.no_soft)
+    acc = accuracy_score(trues, preds)
+    prec, rec, f1, _ = precision_recall_fscore_support(trues, preds, average="macro")
+    # Debug CSV برای شفافیت کامل
+    dbg_path = os.path.join(cfg["general"]["save_dir"], f"debug_{model_name}_{mode}_seed{seed_eff}.csv")
+    pd.DataFrame({
+        "text": test_ds.raw_texts[:len(trues)],
+        "true_label": trues,
+        "pred_label": preds,
+    }).to_csv(dbg_path, index=False)
+    print(f"[DEBUG] wrote per-sample predictions to {dbg_path}")
+    return acc, prec, rec, f1
 
-        out = model(
-            input_ids=batch_dev["input_ids"],
-            attention_mask=batch_dev["attention_mask"],
-            context_tag_ids=batch_dev["context_tag_ids"],
-            labels=batch_dev["labels"],
-            **fwd_kwargs
-        )
-        logits = out["logits"]
-        preds = logits.argmax(-1)
-
-        y_true.extend(batch_dev["labels"].cpu().tolist())
-        y_pred.extend(preds.cpu().tolist())
-        if isinstance(out, dict) and "aux" in out and "gate_mean" in out["aux"]:
-            aux_gate_means.append(out["aux"]["gate_mean"])
-
-    # overall
-    overall = compute_metrics(y_true, y_pred)
-
-    # safety vs non-safety split
-    s_idx = [i for i, l in enumerate(y_true) if l == safety_class_id]
-    ns_idx = [i for i, l in enumerate(y_true) if l != safety_class_id]
-
-    def _submetrics(idxs):
-        if len(idxs) == 0:
-            return {"accuracy": np.nan, "precision": np.nan, "recall": np.nan, "f1": np.nan}
-        yt = [y_true[i] for i in idxs]
-        yp = [y_pred[i] for i in idxs]
-        return compute_metrics(yt, yp)
-
-    safety_m = _submetrics(s_idx)
-    nonsafety_m = _submetrics(ns_idx)
-
-    extras = {}
-    if aux_gate_means:
-        extras["avg_gate_mean"] = float(np.mean(aux_gate_means))
-
-    return overall, safety_m, nonsafety_m, extras
-def build_args():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--model", type=str, default="salmon", choices=["salmon","salmonn","bert","gpt2"])
-    ap.add_argument("--pretrained_name", type=str, default="bert-base-uncased")
-
-    ap.add_argument("--train_path", type=str, default="Data/samples/mini_train.jsonl")
-    ap.add_argument("--val_path", type=str, default="Data/samples/mini_val.jsonl")
-    ap.add_argument("--ctx_vocab_path", type=str, default="Data/context_vocab.json")
-
-    ap.add_argument("--epochs", type=int, default=3)
-    ap.add_argument("--bs", type=int, default=16)
-    ap.add_argument("--lr", type=float, default=2e-5)
-    ap.add_argument("--max_len", type=int, default=128)
-    ap.add_argument("--seed", type=int, default=42)
-    ap.add_argument("--ctx_dim", type=int, default=16)
-    ap.add_argument("--dropout", type=float, default=0.1)
-    ap.add_argument("--soft_prompt_len", type=int, default=16)
-
-    ap.add_argument("--ctx_off", action="store_true", help="turn off contexts in SALMON/SALMONN")
-    ap.add_argument("--no_soft", action="store_true", help="turn off SALMONN (mode)")
-    ap.add_argument("--prior_on", action="store_true", help="فعال‌سازی وزن‌دهی loss برای safety/urgency")
-
-    ap.add_argument("--alpha", type=float, default=0.7, help="safety weight")
-    ap.add_argument("--beta", type=float, default=0.3, help="safety weight")
-
-    ap.add_argument("--safety_label", type=str, default="Safety")
-    ap.add_argument("--urgency_tags", type=str, default="URGENCY_CRITICAL,URGENCY_HIGH")
-    ap.add_argument("--results_dir", type=str, default="results")
-    ap.add_argument("--save_csv", type=str, default=None,
-                    help="if CSV File is empty, is uploaded with this name")
-
-    return ap.parse_args()
-
-def main():
-    args = build_args()
-    set_seed(args.seed)
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    os.makedirs(args.results_dir, exist_ok=True)
-
-    train_ds = JsonlTextDataset(args.train_path)
-    val_ds   = JsonlTextDataset(args.val_path, label2id=train_ds.label2id)
-
-    num_labels = len(train_ds.label2id)
-    id2label = {v:k for k,v in train_ds.label2id.items()}
-
-    if args.safety_label in train_ds.label2id:
-        safety_class_id = train_ds.label2id[args.safety_label]
-    else:
-        safety_class_id = 0
-
-    ctx_vocab = load_context_vocab(args.ctx_vocab_path)
-    model, tokenizer = build_model(args, num_labels=num_labels, ctx_vocab=ctx_vocab)
-    model.to(device)
-    collate = build_collate(tokenizer, ctx_vocab, max_len=args.max_len)
-    train_loader = DataLoader(train_ds, batch_size=args.bs, shuffle=True, collate_fn=collate)
-    val_loader   = DataLoader(val_ds,   batch_size=args.bs, shuffle=False, collate_fn=collate)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
-    total_steps = len(train_loader) * args.epochs
-    scheduler = get_linear_schedule_with_decay(optimizer, num_warmup_steps=int(0.1*total_steps), num_training_steps=total_steps)
-    urgency_tags = [t.strip() for t in args.urgency_tags.split(",") if t.strip()]
-    best_f1 = -1.0
-    for ep in range(1, args.epochs + 1):
-        tr_loss = train_one_epoch(model, train_loader, optimizer, scheduler, device, args, safety_class_id, urgency_tags)
-        overall, s_m, ns_m, extras = evaluate(model, val_loader, device, args, safety_class_id)
-        print(f"[Epoch {ep}] train_loss={tr_loss:.4f}  "
-              f"val_f1={overall['f1']:.4f}  val_acc={overall['accuracy']:.4f}")
-        if overall["f1"] > best_f1:
-            best_f1 = overall["f1"]
-        row = {
-            "epoch": ep,
-            "model": args.model,
-            "ctx_off": args.ctx_off,
-            "no_soft": args.no_soft,
-            "prior_on": args.prior_on,
-            "alpha": args.alpha,
-            "beta": args.beta,
-            "seed": args.seed,
-            "overall_accuracy": overall["accuracy"],
-            "overall_precision": overall["precision"],
-            "overall_recall": overall["recall"],
-            "overall_f1": overall["f1"],
-            "safety_accuracy": s_m["accuracy"],
-            "safety_precision": s_m["precision"],
-            "safety_recall": s_m["recall"],
-            "safety_f1": s_m["f1"],
-            "nonsafety_accuracy": ns_m["accuracy"],
-            "nonsafety_precision": ns_m["precision"],
-            "nonsafety_recall": ns_m["recall"],
-            "nonsafety_f1": ns_m["f1"],
-        }
-        row.update(extras)
-        if args.save_csv:
-            out_csv = os.path.join(args.results_dir, args.save_csv)
-        else:
-            tag = []
-            if args.ctx_off: tag.append("ctxOff")
-            if args.no_soft and args.model == "salmonn": tag.append("noSoft")
-            if args.prior_on: tag.append("prior")
-            tag = "_".join(tag) if tag else "base"
-            out_csv = os.path.join(args.results_dir, f"{args.model}_{tag}.csv")
-
-        save_row_csv(out_csv, row)
-
-    print("Done.")
-
+# ---------------------------
+# Main (with repeat_seeds aggregation)
+# ---------------------------
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", default="config.yaml")
+    parser.add_argument("--train_path", default="data/train_mimic2000_hist.csv")
+    parser.add_argument("--test_path",  default="data/test_mimic40_hist.csv")
+    # اختیاری برای دیباگ سریع
+    parser.add_argument("--limit_train", type=int, default=0)
+    parser.add_argument("--limit_test",  type=int, default=0)
+    args = parser.parse_args()
 
+    with open(args.config, "r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
+
+    g = cfg.get("general", {})
+    g["lr"]         = float(g.get("lr", 2e-5))
+    g["epochs"]     = int(g.get("epochs", 3))
+    g["batch_size"] = int(g.get("batch_size", 8))
+    g["num_labels"] = int(g.get("num_labels", 4))
+    g["max_len"]    = int(g.get("max_len", 128))
+    cfg["general"]  = g
+
+    # Device
+    if cfg["general"].get("device", "auto") == "auto":
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+    else:
+        device = cfg["general"]["device"]
+    cfg["general"]["device"] = device
+    print(f">>> Device: {device}")
+
+    # Data
+    df_train = pd.read_csv(args.train_path)
+    df_test  = pd.read_csv(args.test_path)
+    if args.limit_train > 0: df_train = df_train.head(args.limit_train)
+    if args.limit_test  > 0: df_test  = df_test.head(args.limit_test)
+    print(f">>> Using data: train={len(df_train)}  test={len(df_test)}")
+
+    # ثابت کردن نگاشت لیبل‌ها
+    label_order = ["ROUTING","PARKING","TRAFFIC_MGMT","ENTERTAINMENT"]
+    label2id = {lab:i for i,lab in enumerate(label_order)}
+    df_train["label_id"] = df_train["target_label"].map(label2id)
+    df_test["label_id"]  = df_test["target_label"].map(label2id)
+    if df_train["label_id"].isna().any() or df_test["label_id"].isna().any():
+        bad = set(df_train.loc[df_train["label_id"].isna(),"target_label"]).union(
+              set(df_test.loc[df_test["label_id"].isna(),"target_label"]))
+        raise ValueError(f"Unknown labels: {bad}. Expected one of {label_order}")
+
+    # اجرای چند سید و خلاصه‌سازی
+    os.makedirs(cfg["general"]["save_dir"], exist_ok=True)
+    seeds = cfg["general"].get("repeat_seeds", [cfg["general"]["seed_base"]])
+    results = []
+    for model_name in cfg["models"].keys():
+        for mode in cfg["modes"]:
+            accs, precs, recs, f1s = [], [], [], []
+            for s in seeds:
+                cfg["general"]["seed_base"] = int(s)
+                acc, prec, rec, f1 = train_one_model(df_train, df_test, model_name, mode, cfg)
+                accs.append(acc*100); precs.append(prec*100); recs.append(rec*100); f1s.append(f1*100)
+            row = {
+                "model": model_name,
+                "mode": mode,
+                "accuracy_mean": round(float(np.mean(accs)), 2),
+                "accuracy_std":  round(float(np.std(accs)),  2),
+                "precision_mean":round(float(np.mean(precs)),2),
+                "recall_mean":   round(float(np.mean(recs)), 2),
+                "f1_mean":       round(float(np.mean(f1s)),  2),
+                "f1_std":        round(float(np.std(f1s)),   2),
+            }
+            results.append(row)
+            print(f"✅ {model_name}-{mode} | Acc={row['accuracy_mean']:.2f}±{row['accuracy_std']:.2f}  "
+                  f"F1={row['f1_mean']:.2f}±{row['f1_std']:.2f}")
+
+    out_csv = os.path.join(cfg["general"]["save_dir"], "results_table7_reproduced.csv")
+    pd.DataFrame(results).to_csv(out_csv, index=False)
+    print(f"\n✅ All results saved to {out_csv}")
