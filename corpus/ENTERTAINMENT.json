@@ -1,0 +1,5 @@
+{"id":"e1","text":"If user requests a genre, filter playlists accordingly; confirm explicit content settings.","source":"policy"}
+{"id":"e2","text":"For radio, prefer local stations with strong signal; if unavailable, suggest a streaming equivalent.","source":"ops-guide"}
+{"id":"e3","text":"When driving, keep interactions hands-free and concise.","source":"safety"}
+{"id":"e4","text":"If a podcast is unavailable, suggest the latest episode or a similar show.","source":"ops-guide"}
+{"id":"e5","text":"Honor language preferences and user favorites first.","source":"policy"}
