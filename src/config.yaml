@@ -1,0 +1,32 @@
+general:
+  epochs: 3
+  batch_size: 8
+  lr: 2e-5
+  max_len: 128
+  num_labels: 4
+  seed_base: 42
+  repeat_seeds: [41, 42, 43]     # برای گزارش میانگین±انحراف معیار
+  alpha_priority: 0.35           # شدت اثر priority در مودهای prioritize/full
+  device: "auto"
+  save_dir: "results/"
+  context_field: "context_text"  # اگر خالی بود "context_tags"
+  context_position: "append"     # "append" مثل مقاله، "prepend" برای جلوگیری از truncate
+
+models:
+  bert:
+    pretrained: "bert-base-uncased"
+
+modes:
+  - baseline
+  - context
+  - prioritize
+  - full
+
+inference:
+  retriever: "embedding"         # یا "bm25"
+  top_k: 5
+  corpus_dir: "corpus"
+  prompts_dir: "prompts"
+  use_category_constraint: true
+
+
