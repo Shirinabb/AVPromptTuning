@@ -145,10 +145,8 @@ def train_one_model(df_train, df_test, model_name, mode, cfg):
             pri            = batch["priority"].to(device)
 
             outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-
             if mode in ["prioritize","full"]:
                 per_sample_loss = criterion_none(outputs.logits, labels)  # [B]
-                # وزن‌دهی حول 1 با شدت قابل‌تنظیم
                 pri_centered = pri - pri.mean()
                 w = 1.0 + alpha * pri_centered
                 w = torch.clamp(w, 0.5, 1.5)
@@ -174,7 +172,6 @@ def train_one_model(df_train, df_test, model_name, mode, cfg):
 
     acc = accuracy_score(trues, preds)
     prec, rec, f1, _ = precision_recall_fscore_support(trues, preds, average="macro")
-    # Debug CSV برای شفافیت کامل
     dbg_path = os.path.join(cfg["general"]["save_dir"], f"debug_{model_name}_{mode}_seed{seed_eff}.csv")
     pd.DataFrame({
         "text": test_ds.raw_texts[:len(trues)],
@@ -192,7 +189,6 @@ if __name__ == "__main__":
     parser.add_argument("--config", default="config.yaml")
     parser.add_argument("--train_path", default="data/train_mimic2000_hist.csv")
     parser.add_argument("--test_path",  default="data/test_mimic40_hist.csv")
-    # اختیاری برای دیباگ سریع
     parser.add_argument("--limit_train", type=int, default=0)
     parser.add_argument("--limit_test",  type=int, default=0)
     args = parser.parse_args()
@@ -222,8 +218,6 @@ if __name__ == "__main__":
     if args.limit_train > 0: df_train = df_train.head(args.limit_train)
     if args.limit_test  > 0: df_test  = df_test.head(args.limit_test)
     print(f">>> Using data: train={len(df_train)}  test={len(df_test)}")
-
-    # ثابت کردن نگاشت لیبل‌ها
     label_order = ["ROUTING","PARKING","TRAFFIC_MGMT","ENTERTAINMENT"]
     label2id = {lab:i for i,lab in enumerate(label_order)}
     df_train["label_id"] = df_train["target_label"].map(label2id)
@@ -232,8 +226,6 @@ if __name__ == "__main__":
         bad = set(df_train.loc[df_train["label_id"].isna(),"target_label"]).union(
               set(df_test.loc[df_test["label_id"].isna(),"target_label"]))
         raise ValueError(f"Unknown labels: {bad}. Expected one of {label_order}")
-
-    # اجرای چند سید و خلاصه‌سازی
     os.makedirs(cfg["general"]["save_dir"], exist_ok=True)
     seeds = cfg["general"].get("repeat_seeds", [cfg["general"]["seed_base"]])
     results = []
@@ -261,3 +253,4 @@ if __name__ == "__main__":
     out_csv = os.path.join(cfg["general"]["save_dir"], "results_table7_reproduced.csv")
     pd.DataFrame(results).to_csv(out_csv, index=False)
     print(f"\n✅ All results saved to {out_csv}")
+
